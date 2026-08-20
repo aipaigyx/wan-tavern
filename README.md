@@ -1,11 +1,13 @@
 <div align="center">
 
+![wan-tavern Cover](./screenshots/wan-tavern-cover.jpg)
+
 # 🍻 玩 · 酒馆模式（wan-tavern）
 
 **deepseek-harness 的「酒馆模式」的 DSH 插件**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/)
+[![Version](https://img.shields.io/badge/version-1.0.1-blue.svg)](https://github.com/aipaigyx/wan-tavern/releases)
 [![Node.js](https://img.shields.io/badge/Node.js-%E2%89%A522.19.0-green.svg)](https://nodejs.org/)
 [![DSH](https://img.shields.io/badge/DSH-compatible-8A2BE2.svg)](https://github.com/deepseek-ai/deepseek-harness)
 [![Author](https://img.shields.io/badge/author-%E6%98%9F%E8%90%8CMS%E5%B0%8F%E9%83%AD%E9%85%B1-pink.svg)](https://space.bilibili.com/12644772)
@@ -59,6 +61,11 @@
 
 ## 📸 截图展示
 
+### 封面
+酒馆插件横幅封面图。
+
+<img src="screenshots/wan-tavern-cover.jpg" alt="封面" width="640"/>
+
 ### 状态栏 & 记忆系统
 酒馆状态栏展示核心角色状态、情绪、自定义变量和记忆区块。
 
@@ -94,6 +101,7 @@ wan-tavern/
 │       ├─ state/default.json            # 状态默认值模板
 │       └─ README-TAVERN.md             # 酒馆模式详细使用手册
 ├─ screenshots/
+│   ├─ wan-tavern-cover.jpg              # 封面横幅
 │   ├─ tavern-status-bar.png             # 状态栏截图
 │   ├─ tavern-settings.png               # 设置面板截图
 │   └─ tavern-chat.png                   # 聊天交互截图
