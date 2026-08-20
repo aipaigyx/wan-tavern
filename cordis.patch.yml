@@ -1,0 +1,6 @@
+# dsh-tavern bundle layer: a self-contained 酒馆模式 plugin.
+# Applied automatically via dsh.bundle.patch in package.json.
+- insert:
+    - id: dsh-tavern
+      name: dsh-tavern
+      config: {}

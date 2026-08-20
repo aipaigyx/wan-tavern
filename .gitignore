@@ -1,0 +1,33 @@
+# Logs
+*.log
+npm-debug.log*
+
+# Dependencies
+node_modules/
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Build output
+dist/
+build/
+.cache/
+
+# Env
+.env
+.env.local
+.env.*.local
+.credentials.yaml
+
+# DSH specific (preset state/ only contains default.json template, safe to include)
+.dsh/
+.profiles/
+*.runtime.json
+.backup/

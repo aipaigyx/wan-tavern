@@ -1,0 +1,88 @@
+{
+  "name": "wan-tavern",
+  "version": "1.0.0",
+  "description": "玩 · 酒馆模式完整插件：把 deepseek-harness 的酒馆模式一键打包为可分发、可安装的独立 DSH 插件。",
+  "keywords": [
+    "dsh",
+    "deepseek-harness",
+    "plugin",
+    "tavern",
+    "roleplay",
+    "character-ai",
+    "memory-system",
+    "star-meng-y-xiao-guo-jiang",
+    "bilibili"
+  ],
+  "author": {
+    "name": "B站星萌Y小郭酱",
+    "url": "https://space.bilibili.com/12644772"
+  },
+  "contributors": [
+    {
+      "name": "B站星萌Y小郭酱",
+      "url": "https://space.bilibili.com/12644772"
+    }
+  ],
+  "homepage": "https://space.bilibili.com/12644772",
+  "bugs": {
+    "url": "https://space.bilibili.com/12644772"
+  },
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "main": "entry.js",
+  "bin": {
+    "wan-tavern-install": "./install.mjs"
+  },
+  "scripts": {
+    "install:preset": "node ./install.mjs preset",
+    "test": "node ./tests/tool-state.test.mjs",
+    "lint": "echo \"No lint configured yet\"",
+    "version": "echo \"Use git tag for versioning\""
+  },
+  "exports": {
+    ".": "./entry.js",
+    "./client": "./client.js",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "entry.js",
+    "client.js",
+    "cordis.patch.yml",
+    "install.mjs",
+    "presets/tavern",
+    "tests",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=22.19.0"
+  },
+  "dependencies": {
+    "@deepseek-ai/schemastery": ">=3.18.0"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/dsh-client-ui-settings": "*",
+    "@deepseek-ai/dsh-client-runtime": "*",
+    "@deepseek-ai/dsh-client-ui-slots": "*",
+    "@deepseek-ai/dsh-client-ui-sidebar": "*",
+    "@deepseek-ai/dsh-api-remotes": "*"
+  },
+  "dsh": {
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-settings",
+        "@deepseek-ai/dsh-client-runtime",
+        "@deepseek-ai/dsh-client-ui-slots",
+        "@deepseek-ai/dsh-client-ui-sidebar",
+        "@deepseek-ai/dsh-api-remotes"
+      ]
+    },
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "tavernName": "深夜小酒馆",
+  "worldBook": "",
+  "atmosphere": "",
+  "autoMemory": true,
+  "memoryDecay": "normal",
+  "greeting": "",
+  "rules": [],
+  "customStates": [
+    {
+      "key": "接客数",
+      "label": "接客",
+      "type": "counter",
+      "def": "0"
+    },
+    {
+      "key": "兴奋度",
+      "label": "兴奋",
+      "type": "meter",
+      "def": ""
+    }
+  ],
+  "initialState": {
+    "scene": "深夜小酒馆吧台旁",
+    "time": "深夜",
+    "emotion": "平静",
+    "intensity": "适中",
+    "intimacy": 20,
+    "affection": 15,
+    "trust": 10
+  }
+}
