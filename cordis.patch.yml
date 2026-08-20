@@ -1,6 +1,7 @@
-# dsh-tavern bundle layer: a self-contained 酒馆模式 plugin.
+# wan-tavern bundle layer: a self-contained 酒馆模式 plugin.
 # Applied automatically via dsh.bundle.patch in package.json.
+# id 保持 dsh-tavern（避免已装用户崩溃），name 使用 npm 包名 wan-tavern
+# —— Cordis 按 name import 包，写错会导致 Cannot find package。
 - insert:
     - id: dsh-tavern
-      name: dsh-tavern
-      config: {}
+      name: wan-tavern

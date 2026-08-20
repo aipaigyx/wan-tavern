@@ -1,11 +1,11 @@
 {
   "name": "wan-tavern",
   "version": "1.0.0",
-  "description": "玩 · 酒馆模式完整插件：把 deepseek-harness 的酒馆模式一键打包为可分发、可安装的独立 DSH 插件。",
+  "description": "玩 · 酒馆模式完整插件：把 deepseek-harness 的酒馆模式一键打包为可分发、可安装的独立 DSH 插件。支持记忆系统、状态栏、立绘情绪、自定义变量表等功能。",
   "keywords": [
+    "dsh-plugin",
     "dsh",
     "deepseek-harness",
-    "plugin",
     "tavern",
     "roleplay",
     "character-ai",
@@ -23,14 +23,17 @@
       "url": "https://space.bilibili.com/12644772"
     }
   ],
-  "homepage": "https://space.bilibili.com/12644772",
+  "homepage": "https://github.com/aipaigyx/wan-tavern",
   "bugs": {
-    "url": "https://space.bilibili.com/12644772"
+    "url": "https://github.com/aipaigyx/wan-tavern/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aipaigyx/wan-tavern.git"
   },
   "license": "MIT",
-  "private": true,
   "type": "module",
-  "main": "entry.js",
+  "main": "index.js",
   "bin": {
     "wan-tavern-install": "./install.mjs"
   },
@@ -41,24 +44,29 @@
     "version": "echo \"Use git tag for versioning\""
   },
   "exports": {
-    ".": "./entry.js",
+    ".": "./index.js",
     "./client": "./client.js",
+    "./panel.html": "./panel.html",
     "./cordis.patch.yml": "./cordis.patch.yml",
     "./package.json": "./package.json"
   },
   "files": [
+    "index.js",
     "entry.js",
     "client.js",
+    "panel.html",
     "cordis.patch.yml",
     "install.mjs",
-    "presets/tavern",
-    "tests",
+    "presets/tavern/",
+    "tests/",
+    "screenshots/",
     "README.md",
+    "README-TAVERN.md",
     "CHANGELOG.md",
     "LICENSE"
   ],
   "engines": {
-    "node": ">=22.19.0"
+    "node": ">=20"
   },
   "dependencies": {
     "@deepseek-ai/schemastery": ">=3.18.0"
@@ -68,7 +76,7 @@
     "@deepseek-ai/dsh-client-runtime": "*",
     "@deepseek-ai/dsh-client-ui-slots": "*",
     "@deepseek-ai/dsh-client-ui-sidebar": "*",
-    "@deepseek-ai/dsh-api-remotes": "*"
+    "@deepseek-ai/dsh-tools": "*"
   },
   "dsh": {
     "client": {
@@ -77,8 +85,7 @@
         "@deepseek-ai/dsh-client-ui-settings",
         "@deepseek-ai/dsh-client-runtime",
         "@deepseek-ai/dsh-client-ui-slots",
-        "@deepseek-ai/dsh-client-ui-sidebar",
-        "@deepseek-ai/dsh-api-remotes"
+        "@deepseek-ai/dsh-client-ui-sidebar"
       ]
     },
     "bundle": {

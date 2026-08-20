@@ -1,3 +1,12 @@
+/**
+ * wan-tavern — DSH Cordis 插件入口。
+ *
+ * DSH 通过 Cordis 插件机制加载本模块：
+ *   - name / inject / apply 为 Cordis 标准导出
+ *   - apply 注册酒馆配置 API
+ *   - client.js 通过 window.__ModuleLoader__.load({ id: 'dsh-tavern' })
+ *     注册浏览器端模块（侧边栏/设置/状态栏/记忆扫描器）
+ */
 import z from '@deepseek-ai/schemastery'
 
 export const Config = z.object({})
@@ -9,11 +18,9 @@ export const inject = ['tools', 'webServer', 'agentDefaultModel', 'attachments']
 export function apply(ctx, config = {}) {
   ctx.logger?.info?.('[dsh-tavern] loaded')
 
-  // 如果有 webServer，注册酒馆配置 API
   const webServer = ctx.webServer ?? ctx.get('webServer')
   if (webServer) {
     try {
-      // 酒馆配置 API（与预设脚本协同工作）
       webServer.register({
         kind: 'exact',
         path: '/api/tavern/config',

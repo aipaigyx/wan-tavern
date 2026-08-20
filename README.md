@@ -22,8 +22,9 @@
 - [📦 目录结构](#-目录结构)
 - [⚙️ 安装](#️-安装)
   - [前置要求](#前置要求)
-  - [方式 A：一键安装（推荐）](#方式-a一键安装推荐)
-  - [方式 B：手动安装](#方式-b手动安装)
+  - [方式 A：dsh plugin 命令（推荐）](#方式-adsh-plugin-命令推荐)
+  - [方式 B：一键安装脚本](#方式-b一键安装脚本)
+  - [方式 C：手动安装](#方式-c手动安装)
 - [🚀 使用](#-使用)
 - [🔧 配置](#-配置)
 - [🧠 记忆系统详解](#-记忆系统详解)
@@ -103,24 +104,37 @@ wan-tavern/
 
 | 依赖 | 版本要求 | 说明 |
 |------|----------|------|
-| [Node.js](https://nodejs.org/) | ≥ 22.19.0 | DSH 引擎运行时 |
+| [Node.js](https://nodejs.org/) | ≥ 20 | DSH 引擎运行时 |
 | [deepseek-harness](https://github.com/deepseek-ai/deepseek-harness) | ≥ 最新 commit | 宿主框架 |
 | 模型 API Key | — | 在 DSH 设置中配置（SiliconFlow / NVIDIA 等） |
 
-### 方式 A：一键安装（推荐）
+### 方式 A：`dsh plugin` 命令（推荐）
 
 ```bash
-# 1. 把 wan-tavern 文件夹放到本地任意位置（推荐放在 DSH 项目的 vendor/ 下）
+# 在 DSH 项目根目录下执行
+dsh plugin --profile web add wan-tavern
 
-# 2. 进入插件目录
+# 或直接用 pnpm
+pnpm --dir .dsh/profiles/web add wan-tavern
+```
+
+命令会自动：
+1. 从 npm 仓库下载 `wan-tavern` 包
+2. 安装到 `.dsh/profiles/web/node_modules/wan-tavern`
+3. 读取 `package.json` 中的 `dsh` 配置，将插件注册到 bundle 层
+4. 重启 DSH 后即可在侧边栏看到「🍻 酒馆」入口
+
+### 方式 B：一键安装脚本
+
+```bash
+# 1. 把 wan-tavern 文件夹放到本地任意位置
 cd wan-tavern
 
-# 3. 自动发现本机 DSH 根目录并完成部署
+# 2. 自动发现本机 DSH 根目录并完成部署
 node install.mjs preset
 ```
 
 脚本会自动完成：
-
 1. 扫描本机可能的 DSH 根目录（含 `.dsh` 子目录的那层）
 2. 将 `presets/tavern` 拷贝到 `<dsh-root>/.dsh/.agent-presets/tavern`
 3. 如果目标目录是 DSH 项目根（含 `package.json`），自动把 `wan-tavern` 登记进 `dependencies` 与 `dsh.profile.bundles`
@@ -139,7 +153,7 @@ node install.mjs preset --target "%APPDATA%/dsh/User"
 node install.mjs preset --target <dir> --yes
 ```
 
-### 方式 B：手动安装
+### 方式 C：手动安装
 
 1. 把 `wan-tavern` 文件夹放到 DSH 项目的 `vendor/` 或 `node_modules/` 下
 2. 编辑 DSH 项目根目录下的 `package.json`：

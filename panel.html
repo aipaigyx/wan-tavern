@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>酒馆设置 · wan-tavern</title>
+<style>
+  :root {
+    --bg: #f5f5f7; --card: #ffffff; --border: #d9d9e3; --text: #1c1c28;
+    --muted: #6b6b7b; --accent: #c96a3b; --accent-light: #e8a378; --err: #d64545; --ok: #2e9e5b;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1614; --card: #241f1c; --border: #3d3430; --text: #f0e8e0;
+      --muted: #a89a90; --accent: #e8a378; --accent-light: #c96a3b; --err: #ff6b6b; --ok: #4cc38a;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font: 14px/1.5 system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+  }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 20px 16px 60px; }
+  h1 { font-size: 20px; margin: 4px 0 4px; color: var(--accent); }
+  .subtitle { color: var(--muted); font-size: 13px; margin-bottom: 20px; }
+  h2 { font-size: 15px; margin: 24px 0 10px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+  .card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 16px 18px; margin-bottom: 12px;
+  }
+  .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
+  .field { display: flex; flex-direction: column; gap: 4px; }
+  .field label { font-size: 12px; color: var(--muted); }
+  input[type=text], input[type=number], select, textarea {
+    background: var(--bg); color: var(--text); border: 1px solid var(--border);
+    border-radius: 8px; padding: 7px 10px; font-size: 14px; outline: none; font-family: inherit;
+  }
+  input[type=text]:focus, select:focus, textarea:focus { border-color: var(--accent); }
+  textarea { resize: vertical; min-height: 80px; }
+  button {
+    background: var(--card); color: var(--text); border: 1px solid var(--border);
+    border-radius: 8px; padding: 7px 14px; font-size: 14px; cursor: pointer; transition: all .12s;
+  }
+  button:hover { border-color: var(--accent); color: var(--accent); }
+  button:disabled { opacity: .5; cursor: default; }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  button.primary:hover { opacity: .9; color: #fff; }
+  button.danger { color: var(--err); border-color: var(--err); }
+  button.danger:hover { background: var(--err); color: #fff; }
+  table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+  th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--border); font-size: 13px; }
+  th { color: var(--muted); font-weight: 600; background: var(--bg); }
+  td input, td select { width: 100%; }
+  .notice { padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 12px; font-size: 13px; }
+  .notice.err { color: var(--err); border-color: var(--err); background: color-mix(in srgb, var(--err) 8%, transparent); }
+  .notice.ok { color: var(--ok); border-color: var(--ok); background: color-mix(in srgb, var(--ok) 8%, transparent); }
+  .notice.info { color: var(--accent); border-color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, transparent); }
+  .tag { display: inline-block; background: color-mix(in srgb, var(--accent) 20%, transparent); color: var(--accent); padding: 2px 8px; border-radius: 999px; font-size: 11px; }
+  .diag { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12px; background: var(--bg); padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border); }
+  .diag .key { color: var(--accent); }
+  .diag .val { color: var(--text); }
+  .diag .ok { color: var(--ok); }
+  .diag .err { color: var(--err); }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 600px) { .grid2 { grid-template-columns: 1fr; } }
+  .switch {
+    position: relative; width: 40px; height: 22px; border-radius: 999px;
+    background: var(--border); cursor: pointer; transition: background .15s; flex: none;
+  }
+  .switch::after {
+    content: ""; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px;
+    border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.2); transition: transform .15s;
+  }
+  .switch.on { background: var(--accent); }
+  .switch.on::after { transform: translateX(18px); }
+  .label-row { display: flex; justify-content: space-between; align-items: center; }
+  .label-row span { font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🍺 酒馆设置</h1>
+  <div class="subtitle">玩 · wan-tavern 插件 v1.0.0 | 作者：B站星萌Y小郭酱</div>
+
+  <div id="notice"></div>
+
+  <!-- 基本信息 -->
+  <h2>🏷️ 基本信息</h2>
+  <div class="card">
+    <div class="grid2">
+      <div class="field">
+        <label>酒馆名称</label>
+        <input type="text" id="tavernName" placeholder="例如：深夜小酒馆">
+      </div>
+      <div class="field">
+        <label>老板娘名字</label>
+        <input type="text" id="ownerName" placeholder="例如：小桃">
+      </div>
+    </div>
+    <div class="field" style="margin-top:12px">
+      <label>世界设定</label>
+      <textarea id="worldSetting" placeholder="描述你的酒馆世界观、背景故事……"></textarea>
+    </div>
+    <div class="field" style="margin-top:12px">
+      <label>开场白</label>
+      <textarea id="greeting" placeholder="用户进入酒馆时 AI 的第一句话……"></textarea>
+    </div>
+    <div class="row" style="margin-top:12px">
+      <button class="primary" id="saveBasicBtn">保存基本信息</button>
+      <button id="resetBasicBtn">重置</button>
+    </div>
+  </div>
+
+  <!-- 自定义变量表 -->
+  <h2>📊 自定义状态变量</h2>
+  <div class="card">
+    <div class="row">
+      <button class="primary" id="addVarBtn">➕ 添加变量</button>
+      <span style="color:var(--muted); font-size:13px">支持 counter（计数器）/ meter（仪表）/ text（文本）</span>
+    </div>
+    <table id="varTable">
+      <thead>
+        <tr>
+          <th style="width:30%">变量名 (key)</th>
+          <th style="width:30%">显示名</th>
+          <th style="width:15%">类型</th>
+          <th style="width:15%">默认值</th>
+          <th style="width:10%">操作</th>
+        </tr>
+      </thead>
+      <tbody id="varTbody"></tbody>
+    </table>
+    <div class="row" style="margin-top:12px">
+      <button class="primary" id="saveVarBtn">保存变量表</button>
+      <button id="resetVarBtn">重置为默认</button>
+    </div>
+  </div>
+
+  <!-- 记忆系统 -->
+  <h2>🧠 记忆系统</h2>
+  <div class="card">
+    <div class="label-row" style="margin-bottom:10px">
+      <div>
+        <strong>跨模式记忆扫描</strong>
+        <div style="color:var(--muted); font-size:12px">在任何对话模式下自动捕获 AI 回复中的【记忆】标记</div>
+      </div>
+      <div class="switch on" id="memScanSwitch"></div>
+    </div>
+    <div class="grid2">
+      <div class="field">
+        <label>记忆衰减策略</label>
+        <select id="memDecay">
+          <option value="light">轻量（保留最近 50 条）</option>
+          <option value="normal" selected>标准（保留最近 200 条）</option>
+          <option value="heavy">深度（保留全部）</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>记忆标签</label>
+        <input type="text" id="memTags" placeholder="逗号分隔，如 回忆,日常,关键">
+      </div>
+    </div>
+    <div class="row" style="margin-top:12px">
+      <button class="primary" id="saveMemBtn">保存记忆设置</button>
+      <button class="danger" id="clearMemBtn">清除全部记忆</button>
+    </div>
+  </div>
+
+  <!-- 诊断面板 -->
+  <h2>🩺 诊断信息</h2>
+  <div class="card">
+    <div class="row" style="margin-bottom:10px">
+      <button id="diagBtn">🔄 刷新诊断</button>
+      <span id="diagTime" style="color:var(--muted); font-size:12px"></span>
+    </div>
+    <div class="diag" id="diagContent">点击「刷新诊断」查看当前插件运行状态……</div>
+  </div>
+
+  <!-- 关于 -->
+  <h2>ℹ️ 关于插件</h2>
+  <div class="card">
+    <div class="row">
+      <span class="tag">v1.0.0</span>
+      <span class="tag">DSH Plugin</span>
+      <span class="tag">MIT License</span>
+    </div>
+    <div style="margin-top:10px; color:var(--muted); font-size:13px; line-height:1.8">
+      <div>📦 包名：wan-tavern</div>
+      <div>🔌 插件 ID：dsh-tavern</div>
+      <div>📝 仓库：<a href="https://github.com/aipaigyx/wan-tavern" target="_blank" style="color:var(--accent)">github.com/aipaigyx/wan-tavern</a></div>
+      <div>👤 作者：<a href="https://space.bilibili.com/12644772" target="_blank" style="color:var(--accent)">B站星萌Y小郭酱</a></div>
+      <div>🧪 测试：13/13 pass</div>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict'
+const $ = (id) => document.getElementById(id)
+const CONFIG_API = '/api/tavern/config'
+const DEFAULT_VARS = [
+  { key: 'intimacy', label: '亲密度', type: 'meter', default: 0 },
+  { key: 'affection', label: '好感度', type: 'meter', default: 0 },
+  { key: 'trust', label: '信任度', type: 'meter', default: 0 },
+  { key: 'served', label: '接客数', type: 'counter', default: 0 },
+  { key: 'excitement', label: '兴奋度', type: 'meter', default: 0 }
+]
+
+let config = {}
+let vars = []
+
+function notice(msg, kind) {
+  const el = $('notice')
+  el.className = 'notice' + (kind ? ' ' + kind : '')
+  el.textContent = msg
+}
+
+async function loadConfig() {
+  try {
+    const res = await fetch(CONFIG_API + '?t=' + Date.now())
+    if (!res.ok) throw new Error('HTTP ' + res.status)
+    config = await res.json()
+    notice('配置加载成功', 'ok')
+    renderConfig()
+  } catch (e) {
+    notice('无法连接配置 API：' + e.message + '。请确保酒馆插件已通过 DSH 加载。', 'err')
+    $('diagContent').innerHTML = '<span class="err">❌ 配置 API 不可用</span><br><br>' +
+      '这通常意味着插件尚未被 DSH 宿主加载。请确认：<br>' +
+      '1. 已执行 <code>node install.mjs preset</code> 安装预设<br>' +
+      '2. 已在 DSH 中添加 wan-tavern 依赖<br>' +
+      '3. 已重启 DSH'
+  }
+}
+
+async function saveConfig() {
+  try {
+    const payload = {
+      tavernName: $('tavernName').value.trim(),
+      ownerName: $('ownerName').value.trim(),
+      worldSetting: $('worldSetting').value.trim(),
+      greeting: $('greeting').value.trim(),
+      customStates: collectVars(),
+      memory: {
+        scanGlobal: $('memScanSwitch').classList.contains('on'),
+        decay: $('memDecay').value,
+        tags: $('memTags').value
+      }
+    }
+    const res = await fetch(CONFIG_API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+    if (!res.ok) throw new Error('HTTP ' + res.status)
+    const data = await res.json()
+    if (data.ok) notice('✅ 配置已保存', 'ok')
+    else notice('保存失败：' + (data.error || ''), 'err')
+  } catch (e) {
+    notice('保存失败：' + e.message, 'err')
+  }
+}
+
+function renderConfig() {
+  if (!config || !config.tavernName) return
+  $('tavernName').value = config.tavernName || ''
+  $('ownerName').value = config.ownerName || ''
+  $('worldSetting').value = config.worldSetting || ''
+  $('greeting').value = config.greeting || ''
+  $('memDecay').value = config.memory?.decay || 'normal'
+  $('memTags').value = (config.memory?.tags || []).join(',')
+  setSwitch('memScanSwitch', config.memory?.scanGlobal !== false)
+  renderVars(config.customStates || DEFAULT_VARS)
+}
+
+function renderVars(list) {
+  vars = JSON.parse(JSON.stringify(list || []))
+  const tbody = $('varTbody')
+  tbody.innerHTML = ''
+  if (!vars.length) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:20px">暂无自定义变量，点击「添加变量」创建</td></tr>'
+    return
+  }
+  for (let i = 0; i < vars.length; i++) {
+    const v = vars[i]
+    const tr = document.createElement('tr')
+    tr.innerHTML = `
+      <td><input type="text" value="${(v.key || '').replace(/"/g, '&quot;')}" data-i="${i}" data-f="key"></td>
+      <td><input type="text" value="${(v.label || '').replace(/"/g, '&quot;')}" data-i="${i}" data-f="label"></td>
+      <td>
+        <select data-i="${i}" data-f="type">
+          <option value="counter" ${v.type === 'counter' ? 'selected' : ''}>计数器</option>
+          <option value="meter" ${v.type === 'meter' ? 'selected' : ''}>仪表</option>
+          <option value="text" ${v.type === 'text' ? 'selected' : ''}>文本</option>
+        </select>
+      </td>
+      <td><input type="text" value="${String(v.default ?? '').replace(/"/g, '&quot;')}" data-i="${i}" data-f="default"></td>
+      <td><button class="danger" data-del="${i}">删除</button></td>
+    `
+    tbody.appendChild(tr)
+  }
+  tbody.querySelectorAll('input, select').forEach(el => {
+    el.addEventListener('input', (e) => {
+      const i = +e.target.dataset.i
+      const f = e.target.dataset.f
+      vars[i][f] = e.target.value
+    })
+  })
+  tbody.querySelectorAll('[data-del]').forEach(btn => {
+    btn.onclick = () => {
+      const i = +btn.dataset.del
+      vars.splice(i, 1)
+      renderVars(vars)
+    }
+  })
+}
+
+function collectVars() {
+  return vars.map(v => ({
+    key: (v.key || '').trim(),
+    label: (v.label || '').trim(),
+    type: v.type || 'meter',
+    default: v.default ?? (v.type === 'counter' ? 0 : v.type === 'meter' ? 50 : '')
+  })).filter(v => v.key)
+}
+
+function setSwitch(id, on) {
+  const el = $(id)
+  if (!el) return
+  if (on) el.classList.add('on')
+  else el.classList.remove('on')
+}
+
+function runDiagnostics() {
+  $('diagTime').textContent = new Date().toLocaleTimeString()
+  const items = [
+    { label: '配置 API', value: CONFIG_API, status: 'unknown' },
+    { label: '插件版本', value: config.version || 'unknown', status: 'ok' },
+    { label: '酒馆名称', value: config.tavernName || '（未设置）', status: config.tavernName ? 'ok' : 'warn' },
+    { label: '自定义变量数', value: String((config.customStates || []).length), status: 'ok' },
+    { label: '记忆扫描', value: config.memory?.scanGlobal !== false ? '已开启' : '已关闭', status: config.memory?.scanGlobal !== false ? 'ok' : 'warn' },
+    { label: '记忆衰减', value: config.memory?.decay || 'normal', status: 'ok' },
+    { label: 'dataDir', value: config.dataDir || '—', status: 'unknown' }
+  ]
+  const colorFor = s => s === 'ok' ? 'ok' : s === 'err' ? 'err' : ''
+  const iconFor = s => s === 'ok' ? '✅' : s === 'err' ? '❌' : 'ℹ️'
+  $('diagContent').innerHTML = items.map(it =>
+    `<div><span class="key">${iconFor(it.status)} ${it.label}：</span><span class="val ${colorFor(it.status)}">${it.value}</span></div>`
+  ).join('')
+}
+
+// 事件绑定
+$('saveBasicBtn').onclick = saveConfig
+$('resetBasicBtn').onclick = () => { loadConfig() }
+$('saveVarBtn').onclick = saveConfig
+$('resetVarBtn').onclick = () => { renderVars(DEFAULT_VARS) }
+$('addVarBtn').onclick = () => {
+  vars.push({ key: '', label: '', type: 'meter', default: 0 })
+  renderVars(vars)
+}
+$('clearMemBtn').onclick = () => {
+  if (!window.confirm('确定要清除全部记忆吗？此操作不可恢复！')) return
+  fetch('/api/memory/clear', { method: 'POST' })
+    .then(r => r.json())
+    .then(d => notice(d.ok ? '记忆已清除' : '清除失败', d.ok ? 'ok' : 'err'))
+    .catch(() => notice('清除请求失败', 'err'))
+}
+$('saveMemBtn').onclick = saveConfig
+$('memScanSwitch').onclick = () => {
+  const on = !$('memScanSwitch').classList.contains('on')
+  setSwitch('memScanSwitch', on)
+}
+$('diagBtn').onclick = () => { loadConfig().then(runDiagnostics) }
+
+// 初始化
+loadConfig()
+</script>
+</body>
+</html>
