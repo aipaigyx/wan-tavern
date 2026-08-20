@@ -56,6 +56,23 @@
 - 🩺 **诊断面板**：实时展示 API 基址、配置来源、状态权威源等关键诊断信息
 - 🔌 **零侵入 DSH**：所有改动都在插件内部完成，不修改任何 DSH 核心代码
 
+## 📸 截图展示
+
+### 状态栏 & 记忆系统
+酒馆状态栏展示核心角色状态、情绪、自定义变量和记忆区块。
+
+<img src="screenshots/tavern-status-bar.png" alt="状态栏预览" width="480"/>
+
+### 酒馆设置面板
+可视化配置酒馆信息、自定义变量表和记忆系统参数。
+
+<img src="screenshots/tavern-settings.png" alt="设置面板预览" width="480"/>
+
+### 聊天交互
+AI 回复中自动识别 `【记忆】` 标记，跨模式共享记忆。
+
+<img src="screenshots/tavern-chat.png" alt="聊天预览" width="480"/>
+
 ## 📦 目录结构
 
 ```
