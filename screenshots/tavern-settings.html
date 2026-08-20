@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>酒馆设置面板</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: linear-gradient(135deg, #1a1410 0%, #2a1f15 100%);
+    padding: 40px;
+    min-height: 100vh;
+  }
+  .page-title {
+    color: #d4a574;
+    text-align: center;
+    font-size: 26px;
+    margin-bottom: 30px;
+    font-weight: 600;
+    letter-spacing: 4px;
+  }
+
+  .settings-panel {
+    max-width: 640px;
+    margin: 0 auto;
+    background: linear-gradient(145deg, #2d2018 0%, #3a2a1f 100%);
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    overflow: hidden;
+  }
+
+  .panel-header {
+    background: rgba(0,0,0,0.2);
+    padding: 20px 24px;
+    border-bottom: 1px solid rgba(212, 165, 116, 0.15);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .panel-icon {
+    font-size: 24px;
+  }
+  .panel-title {
+    color: #f0d4a8;
+    font-size: 18px;
+    font-weight: 600;
+  }
+  .panel-subtitle {
+    color: #6b5544;
+    font-size: 12px;
+    margin-top: 2px;
+  }
+
+  .panel-body {
+    padding: 20px 24px;
+  }
+
+  .setting-section {
+    margin-bottom: 24px;
+  }
+  .setting-section:last-child {
+    margin-bottom: 0;
+  }
+  .section-label {
+    color: #8a6f55;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-label::before {
+    content: '';
+    width: 3px;
+    height: 14px;
+    background: #d4a574;
+    border-radius: 2px;
+  }
+
+  .input-group {
+    background: rgba(0,0,0,0.2);
+    border-radius: 10px;
+    padding: 12px 14px;
+    border: 1px solid rgba(212, 165, 116, 0.1);
+  }
+  .input-group input[type="text"],
+  .input-group textarea {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: #d4c4a8;
+    font-size: 14px;
+    font-family: inherit;
+    outline: none;
+  }
+  .input-group input::placeholder,
+  .input-group textarea::placeholder {
+    color: #5a4636;
+  }
+
+  .row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .row:last-child {
+    margin-bottom: 0;
+  }
+
+  .field {
+    flex: 1;
+  }
+  .field-label {
+    color: #6b5544;
+    font-size: 11px;
+    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+  }
+
+  /* 变量表 */
+  .var-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 6px;
+  }
+  .var-table th {
+    color: #6b5544;
+    font-size: 11px;
+    font-weight: 500;
+    text-align: left;
+    padding: 0 8px;
+    letter-spacing: 0.5px;
+  }
+  .var-table th:nth-child(4),
+  .var-table th:nth-child(5) {
+    text-align: center;
+  }
+  .var-row td {
+    padding: 10px 8px;
+    background: rgba(212, 165, 116, 0.06);
+    color: #c4a882;
+    font-size: 13px;
+    border-top: 1px solid rgba(212, 165, 116, 0.08);
+    border-bottom: 1px solid rgba(212, 165, 116, 0.08);
+  }
+  .var-row td:first-child {
+    border-left: 1px solid rgba(212, 165, 116, 0.08);
+    border-radius: 8px 0 0 8px;
+  }
+  .var-row td:last-child {
+    border-right: 1px solid rgba(212, 165, 116, 0.08);
+    border-radius: 0 8px 8px 0;
+    text-align: center;
+  }
+  .var-type {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .var-type.counter {
+    background: rgba(90, 138, 181, 0.2);
+    color: #87ceeb;
+  }
+  .var-type.meter {
+    background: rgba(212, 117, 138, 0.2);
+    color: #ff9eb5;
+  }
+  .var-del {
+    color: #6b5544;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 0 4px;
+  }
+  .var-del:hover {
+    color: #d4758a;
+  }
+
+  .add-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    padding: 10px;
+    background: rgba(212, 165, 116, 0.08);
+    border: 1px dashed rgba(212, 165, 116, 0.3);
+    border-radius: 10px;
+    color: #8a6f55;
+    font-size: 13px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: all 0.2s;
+  }
+  .add-btn:hover {
+    background: rgba(212, 165, 116, 0.12);
+    border-color: rgba(212, 165, 116, 0.5);
+    color: #d4a574;
+  }
+
+  /* 开关 */
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 10px;
+    margin-bottom: 8px;
+  }
+  .toggle-row:last-child {
+    margin-bottom: 0;
+  }
+  .toggle-info .toggle-label {
+    color: #d4c4a8;
+    font-size: 14px;
+  }
+  .toggle-info .toggle-desc {
+    color: #6b5544;
+    font-size: 12px;
+    margin-top: 2px;
+  }
+  .toggle-switch {
+    width: 44px;
+    height: 24px;
+    background: #5a4636;
+    border-radius: 12px;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  .toggle-switch.on {
+    background: #d4a574;
+  }
+  .toggle-switch::after {
+    content: '';
+    width: 20px;
+    height: 20px;
+    background: #fff;
+    border-radius: 50%;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    transition: left 0.3s;
+  }
+  .toggle-switch.on::after {
+    left: 22px;
+  }
+
+  /* 底部保存 */
+  .panel-footer {
+    padding: 16px 24px;
+    border-top: 1px solid rgba(212, 165, 116, 0.1);
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+  .btn {
+    padding: 10px 24px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, #d4a574, #c49464);
+    color: #1a1410;
+  }
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(212, 165, 116, 0.3);
+  }
+  .btn-ghost {
+    background: rgba(212, 165, 116, 0.1);
+    color: #8a6f55;
+  }
+  .btn-ghost:hover {
+    background: rgba(212, 165, 116, 0.15);
+  }
+</style>
+</head>
+<body>
+
+<div class="page-title">⚙️ 酒馆设置</div>
+
+<div class="settings-panel">
+  <div class="panel-header">
+    <div class="panel-icon">🍺</div>
+    <div>
+      <div class="panel-title">深夜小酒馆 · 配置</div>
+      <div class="panel-subtitle">酒馆模式专属设置 · 实时生效</div>
+    </div>
+  </div>
+
+  <div class="panel-body">
+    <!-- 基本信息 -->
+    <div class="setting-section">
+      <div class="section-label">酒馆信息</div>
+      <div class="input-group" style="margin-bottom:8px">
+        <input type="text" placeholder="酒馆名称" value="深夜小酒馆">
+      </div>
+      <div class="input-group">
+        <input type="text" placeholder="氛围描述" value="温暖的昏黄灯光，空气中飘着淡淡的酒香...">
+      </div>
+    </div>
+
+    <!-- 自定义变量 -->
+    <div class="setting-section">
+      <div class="section-label">自定义变量表</div>
+      <table class="var-table">
+        <thead>
+          <tr>
+            <th>键名</th>
+            <th>显示名</th>
+            <th>类型</th>
+            <th>默认值</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="var-row">
+            <td>接客数</td>
+            <td>接客</td>
+            <td><span class="var-type counter">计数器</span></td>
+            <td>0</td>
+            <td><span class="var-del">✕</span></td>
+          </tr>
+          <tr class="var-row">
+            <td>兴奋度</td>
+            <td>兴奋</td>
+            <td><span class="var-type meter">仪表</span></td>
+            <td>50</td>
+            <td><span class="var-del">✕</span></td>
+          </tr>
+          <tr class="var-row">
+            <td>亲密度</td>
+            <td>亲密</td>
+            <td><span class="var-type counter">计数器</span></td>
+            <td>20</td>
+            <td><span class="var-del">✕</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="add-btn">+ 添加新变量</div>
+    </div>
+
+    <!-- 记忆设置 -->
+    <div class="setting-section">
+      <div class="section-label">记忆系统</div>
+      <div class="toggle-row">
+        <div class="toggle-info">
+          <div class="toggle-label">自动记忆</div>
+          <div class="toggle-desc">AI 回复中的【记忆】标记自动写入长期记忆</div>
+        </div>
+        <div class="toggle-switch on"></div>
+      </div>
+      <div class="toggle-row">
+        <div class="toggle-info">
+          <div class="toggle-label">记忆衰减</div>
+          <div class="toggle-desc">选择记忆的保留强度</div>
+        </div>
+        <div style="color:#d4a574;font-size:13px;font-weight:600">正常</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel-footer">
+    <button class="btn btn-ghost">重置</button>
+    <button class="btn btn-primary">保存设置</button>
+  </div>
+</div>
+
+</body>
+</html>
