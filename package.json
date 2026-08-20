@@ -1,6 +1,6 @@
 {
   "name": "wan-tavern",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "玩 · 酒馆模式完整插件：把 deepseek-harness 的酒馆模式一键打包为可分发、可安装的独立 DSH 插件。支持记忆系统、状态栏、立绘情绪、自定义变量表等功能。",
   "keywords": [
     "dsh-plugin",

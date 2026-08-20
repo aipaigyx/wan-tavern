@@ -5,6 +5,52 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] - 2026-08-20
+
+### 🐛 Fixed
+
+- **修复插件安装失败**：添加 `index.js` 作为 DSH Cordis 标准入口（之前仅有 `entry.js`，部分 DSH 版本无法识别）
+- **修复 `cordis.patch.yml` name 字段**：改为 `name: wan-tavern`（npm 包名），`id: dsh-tavern`（兼容旧用户），否则 Cordis 按 name import 包时会报 `Cannot find package`
+- **修复 `package.json` main 入口**：从 `"main": "entry.js"` 改为 `"main": "index.js"`，对齐 DSH 插件规范
+- **移除不存在的 inject 依赖**：删除 `@deepseek-ai/dsh-api-remotes`（该包不存在于 DSH 依赖树）
+- **补全 `files` 列表**：添加 `index.js`、`panel.html`、`screenshots/`、`README-TAVERN.md`
+
+### ✨ Added
+
+- 新增 `panel.html`：独立的酒馆设置面板，支持基本信息、自定义变量表、记忆系统、诊断信息可视化配置
+- 新增 `screenshots/` 目录：包含 3 张项目截图用于文档展示
+
+### 📁 Files (v1.0.1)
+
+```
+wan-tavern/
+├── index.js                  # ✨ 新增 DSH Cordis 标准入口
+├── entry.js                  # 保留（兼容性）
+├── client.js
+├── panel.html                # ✨ 新增独立设置面板
+├── cordis.patch.yml          # 已修复 name: wan-tavern
+├── install.mjs
+├── package.json              # 已修复 main/files/inject
+├── README.md
+├── README-TAVERN.md
+├── CHANGELOG.md
+├── LICENSE
+├── screenshots/             # ✨ 新增截图目录
+│   ├── tavern-status-bar.png
+│   ├── tavern-settings.png
+│   └── tavern-chat.png
+├── presets/
+│   └── tavern/
+│       ├── agent.cordis.yml
+│       ├── tavern-config-plugin.mjs
+│       ├── preset.yml
+│       ├── config.json
+│       ├── README-TAVERN.md
+│       └── state/default.json
+└── tests/
+    └── tool-state.test.mjs
+```
+
 ## [1.0.0] - 2026-08-20
 
 ### ✨ Added

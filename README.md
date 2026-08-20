@@ -79,8 +79,10 @@ AI 回复中自动识别 `【记忆】` 标记，跨模式共享记忆。
 ```
 wan-tavern/
 ├─ package.json              # npm 清单（含 dsh 元数据）
-├─ entry.js                  # 服务端 bundle 入口（Cordis）
+├─ index.js                  # ✨ DSH Cordis 标准入口（服务端）
+├─ entry.js                  # 服务端备选入口（Cordis 兼容）
 ├─ client.js                 # 浏览器端模块（侧边栏 / 设置 / 状态栏 / 立绘 / 记忆扫描）
+├─ panel.html                # ✨ 独立设置面板（酒馆设置可视化界面）
 ├─ cordis.patch.yml          # 插件 bundle patch（把 dsh-tavern 插入 DSH 组合）
 ├─ install.mjs               # ✨ 一键安装脚本
 ├─ presets/
@@ -91,6 +93,10 @@ wan-tavern/
 │       ├─ config.json                   # 默认酒馆配置
 │       ├─ state/default.json            # 状态默认值模板
 │       └─ README-TAVERN.md             # 酒馆模式详细使用手册
+├─ screenshots/
+│   ├─ tavern-status-bar.png             # 状态栏截图
+│   ├─ tavern-settings.png               # 设置面板截图
+│   └─ tavern-chat.png                   # 聊天交互截图
 ├─ tests/
 │   └─ tool-state.test.mjs               # 状态合并逻辑单元测试（13/13 pass）
 ├─ CHANGELOG.md             # 版本变更日志
@@ -108,7 +114,27 @@ wan-tavern/
 | [deepseek-harness](https://github.com/deepseek-ai/deepseek-harness) | ≥ 最新 commit | 宿主框架 |
 | 模型 API Key | — | 在 DSH 设置中配置（SiliconFlow / NVIDIA 等） |
 
-### 方式 A：`dsh plugin` 命令（推荐）
+### 📌 方式 A：GitHub Release 下载（当前推荐）
+
+1. 访问 [GitHub Releases](https://github.com/aipaigyx/wan-tavern/releases)
+2. 下载最新的 `wan-tavern-v1.0.0.zip`
+3. 解压到任意目录（如 `D:\wan-tavern`）
+4. 进入目录执行安装脚本：
+
+```bash
+cd D:\wan-tavern
+node install.mjs preset
+```
+
+脚本会自动完成：
+1. 扫描本机可能的 DSH 根目录（含 `.dsh` 子目录的那层）
+2. 将 `presets/tavern` 拷贝到 `<dsh-root>/.dsh/.agent-presets/tavern`
+3. 如果目标目录是 DSH 项目根（含 `package.json`），自动把 `wan-tavern` 登记进 `dependencies` 与 `dsh.profile.bundles`
+4. `config.json` 和 `state/*` 默认**不覆盖**用户已有数据（保留用户历史状态）
+
+### 方式 B：`dsh plugin` 命令（npm 发布中，即将上线）
+
+> ⚠️ npm 发布正在进行中，发布完成后可直接使用以下命令：
 
 ```bash
 # 在 DSH 项目根目录下执行
@@ -124,36 +150,21 @@ pnpm --dir .dsh/profiles/web add wan-tavern
 3. 读取 `package.json` 中的 `dsh` 配置，将插件注册到 bundle 层
 4. 重启 DSH 后即可在侧边栏看到「🍻 酒馆」入口
 
-### 方式 B：一键安装脚本
+### 方式 C：手动 git clone
 
 ```bash
-# 1. 把 wan-tavern 文件夹放到本地任意位置
+# 1. 克隆仓库
+git clone https://github.com/aipaigyx/wan-tavern.git
 cd wan-tavern
 
-# 2. 自动发现本机 DSH 根目录并完成部署
+# 2. 运行安装脚本
 node install.mjs preset
-```
 
-脚本会自动完成：
-1. 扫描本机可能的 DSH 根目录（含 `.dsh` 子目录的那层）
-2. 将 `presets/tavern` 拷贝到 `<dsh-root>/.dsh/.agent-presets/tavern`
-3. 如果目标目录是 DSH 项目根（含 `package.json`），自动把 `wan-tavern` 登记进 `dependencies` 与 `dsh.profile.bundles`
-4. `config.json` 和 `state/*` 默认**不覆盖**用户已有数据（保留用户历史状态）
-
-指定目标目录：
-
-```bash
-# 指定 DSH 项目根
+# 或指定目标 DSH 目录
 node install.mjs preset --target D:/path/to/deepseek-harness-master
-
-# 指定 DSH Desktop 用户数据目录（Windows）
-node install.mjs preset --target "%APPDATA%/dsh/User"
-
-# 跳过 config.json / state 的保留逻辑（强制覆盖用户数据）
-node install.mjs preset --target <dir> --yes
 ```
 
-### 方式 C：手动安装
+### 方式 D：手动安装
 
 1. 把 `wan-tavern` 文件夹放到 DSH 项目的 `vendor/` 或 `node_modules/` 下
 2. 编辑 DSH 项目根目录下的 `package.json`：
@@ -177,6 +188,19 @@ node install.mjs preset --target <dir> --yes
 
 3. 把 `presets/tavern/` 下全部文件复制到 `<dsh-root>/.dsh/.agent-presets/tavern/`
 4. 重启 DSH
+
+### 安装脚本参数
+
+```bash
+# 指定 DSH 项目根
+node install.mjs preset --target D:/path/to/deepseek-harness-master
+
+# 指定 DSH Desktop 用户数据目录（Windows）
+node install.mjs preset --target "%APPDATA%/dsh/User"
+
+# 跳过 config.json / state 的保留逻辑（强制覆盖用户数据）
+node install.mjs preset --target <dir> --yes
+```
 
 ## 🚀 使用
 
