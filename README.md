@@ -2,7 +2,7 @@
 
 # 🍻 玩 · 酒馆模式（wan-tavern）
 
-**把 deepseek-harness 的「酒馆模式」完整打包为独立可分发的 DSH 插件**
+**deepseek-harness 的「酒馆模式」的 DSH 插件**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/)
@@ -11,7 +11,7 @@
 [![Author](https://img.shields.io/badge/author-%E6%98%9F%E8%90%8CMS%E5%B0%8F%E9%83%AD%E9%85%B1-pink.svg)](https://space.bilibili.com/12644772)
 
 > 深夜小酒馆，老板娘倚着吧台等你。进来的人，她都记得——你爱喝什么、上次聊到哪、什么时候会脸红。
-
+酒馆系统
 </div>
 
 ---
